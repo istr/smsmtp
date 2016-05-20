@@ -1,0 +1,41 @@
+{
+  "name": "smsmtp",
+  "version": "0.0.1",
+  "description": "Fake SMTP server that stores and displays a single mail.",
+  "bin": "./bin/smsmtp",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "mailparser": "0.5.3",
+    "memory-cache": "0.1.5",
+    "smtp-server": "1.9.1"
+  },
+  "keywords": [
+    "smtp",
+    "development",
+    "testing",
+    "integration",
+    "ci",
+    "test",
+    "fake",
+    "dummy",
+    "mock",
+    "email",
+    "e-mail"
+  ],
+  "author": {
+    "name": "Ingo Struck",
+    "email": "testing@ingostruck.de",
+    "url": "http://github.com/istr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/istr/smsmtp.git"
+  },
+  "bugs": {
+    "url" : "https://github.com/istr/smsmtp/issues",
+    "email" : "testing@ingostruck.de"
+  },
+  "license": "MIT"
+}
