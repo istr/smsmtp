@@ -34,8 +34,8 @@
     "url": "https://github.com/istr/smsmtp.git"
   },
   "bugs": {
-    "url" : "https://github.com/istr/smsmtp/issues",
-    "email" : "testing@ingostruck.de"
+    "url": "https://github.com/istr/smsmtp/issues",
+    "email": "testing@ingostruck.de"
   },
   "license": "MIT"
 }
