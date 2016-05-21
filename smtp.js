@@ -4,6 +4,7 @@ var MailParser = require('mailparser').MailParser;
 
 var port = process.env.SMSMTP_PORT || 2525;
 var host = process.env.SMSMTP_HOST || '127.0.0.1';
+var ttl = Math.max(0, 1000 * +(process.env.SMSMTP_TTL || '300'));
 
 var server = new SMTPServer({
   logger: true,
@@ -31,7 +32,7 @@ var server = new SMTPServer({
           return attachment;
         });
         (email.to || []).forEach(function(recipient) {
-          cache.put(recipient.address, email);
+          cache.put(recipient.address, email, ttl);
         });
       });
     }
