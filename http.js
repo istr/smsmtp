@@ -16,7 +16,7 @@ var prefix = [
   'ul,li{list-style:none;display:inline-block;margin:0;padding:0;}',
   'th{text-align:right;}',
   'iframe{border:0;}',
-  '#headers,#plaintext{font-family:monospace;background:#eee;overflow:scroll;}',
+  '#headers,#plaintext{font-family:monospace;background:#eee;overflow:auto;}',
   '#htmltext,#plaintext{width:100%;}',
   '#headers,#htmltext,#plaintext{max-width:100%;}',
   '</style>',
