@@ -1,6 +1,6 @@
 {
   "name": "smsmtp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Fake SMTP server that stores and displays a single mail.",
   "bin": "./bin/smsmtp",
   "scripts": {
