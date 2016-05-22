@@ -12,17 +12,17 @@
     "smtp-server": "1.9.1"
   },
   "keywords": [
-    "smtp",
-    "development",
-    "testing",
-    "integration",
-    "ci",
-    "test",
     "fake",
+    "smtp",
+    "test",
     "dummy",
     "mock",
     "email",
-    "e-mail"
+    "e-mail",
+    "development",
+    "testing",
+    "integration",
+    "ci"
   ],
   "author": {
     "name": "Ingo Struck",
