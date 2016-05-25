@@ -32,10 +32,10 @@ The server listens for connections on port 2525 (SMTP) and 3000 (HTTP).
 This can be overridden by setting the environment variables
 
 - `SMSMTP_PORT` for the SMTP listening port
-- `SMSMTP_BIND` for the SMTP bind address / host
+- `SMSMTP_BIND` for the SMTP bind address
 - `SMSMTP_HOST` for the SMTP hostname
 - `SMSMTP_HTTP_PORT` for the HTTP listening port
-- `SMSMTP_HTTP_BIND` for the HTTP bind address / host
+- `SMSMTP_HTTP_BIND` for the HTTP bind address
 - `SMSMTP_HTTP_HOST` for the HTTP hostname
 
 ## Credits
