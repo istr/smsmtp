@@ -16,12 +16,12 @@ smsmtp
 
 ## Usage
 Point your outbound SMTP setup for the server under test to
-`127.0.0.1:2525` (or whatever you set `SMSMTP_HOST`:`SMSMTP_PORT` to).
+`127.0.0.1:2525` (or whatever you set `SMSMTP_BIND`:`SMSMTP_PORT` to).
 
 Use your server to send an email to some address, e.g. `test@foo.com`.
 
 Point your browser to `http://127.0.0.1:3000/test@foo.com`
-(or whatever you set `SMSMTP_HTTP_PORT`:`SMSMTP_HTTP_HOST` to).
+(or whatever you set `SMSMTP_HTTP_PORT`:`SMSMTP_HTTP_BIND` to).
 
 The server will keep only the last email sent to each recipient
 address in memory. No persistence, whatsoever.
@@ -32,9 +32,11 @@ The server listens for connections on port 2525 (SMTP) and 3000 (HTTP).
 This can be overridden by setting the environment variables
 
 - `SMSMTP_PORT` for the SMTP listening port
-- `SMSMTP_HOST` for the SMTP bind address / host
+- `SMSMTP_BIND` for the SMTP bind address / host
+- `SMSMTP_HOST` for the SMTP hostname
 - `SMSMTP_HTTP_PORT` for the HTTP listening port
-- `SMSMTP_HTTP_HOST` for the HTTP bind address / host
+- `SMSMTP_HTTP_BIND` for the HTTP bind address / host
+- `SMSMTP_HTTP_HOST` for the HTTP hostname
 
 ## Credits
 This is heavily inspired by [Jonas Mosbech's](https://github.com/jmosbech)

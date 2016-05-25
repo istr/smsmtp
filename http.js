@@ -1,9 +1,13 @@
 'use strict';
-var cache = require('memory-cache');
+// built-in
 var http = require('http');
+var path = require('path');
+// external modules
+var cache = require('memory-cache');
 
+var bind = process.env.SMSMTP_HTTP_BIND || '127.0.0.1';
 var port = process.env.SMSMTP_HTTP_PORT || 3000;
-var host = process.env.SMSMTP_HTTP_HOST || '127.0.0.1';
+var host = process.env.SMSMTP_HTTP_HOST || 'localhost';
 
 var prefix = [
   '<!DOCTYPE html><html>',
@@ -77,8 +81,14 @@ http.createServer(function(request, response) {
   if (-1 !== requestPath.indexOf('?')) {
     requestPath = request.url.split('?')[0];
   }
+  if (0 !== requestPath.indexOf('/')) {
+    requestPath = '/' + requestPath;
+  }
+  requestPath = path.resolve(requestPath);
   if (-1 !== requestPath.indexOf('/')) {
-    requestPath = request.url.split('/')[1];
+    const parts = requestPath.split('/');
+    parts.shift();
+    requestPath = (parts || []).join('/');
   }
   var content = [].concat(prefix);
   var mail;
@@ -108,6 +118,6 @@ http.createServer(function(request, response) {
     'Content-Type': 'text/html;charset=utf-8'
   });
   response.end(content.join(''));
-}).listen(port, host, function() {
-  console.log('SMSMTP HTTP frontend listening on: http://%s:%s', host, port);
+}).listen(port, bind, function() {
+  console.log('SMSMTP HTTP frontend listening on: %s:%s', bind, port, ' for: http://' + host + ':' + port);
 });
