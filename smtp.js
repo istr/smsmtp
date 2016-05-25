@@ -43,7 +43,9 @@ var server = new SMTPServer({
       return callback(new Error('username ' + tokenInvalid));
     }
     return callback(null, {
-      user: auth.username
+      user: {
+        username: auth.username
+      }
     });
   },
   onConnect: function (session, callback) {
@@ -55,7 +57,8 @@ var server = new SMTPServer({
   onData: function (stream, session, callback) {
     var mailparser = session.mailparser;
     const user = session.user;
-    const qMessage = 'Message queued, see: https://' + host + '/' + user + '/';
+    const username = user && user.username || 'unknown';
+    const qMessage = 'Message queued, see: https://' + host + '/' + username + '/';
     var firstRecipient;
     if (!session.mailparser) {
       mailparser = new MailParser();
@@ -70,7 +73,7 @@ var server = new SMTPServer({
           if (!firstRecipient) {
             firstRecipient = recipient.address;
           }
-          cache.put(user + '/' + recipient.address, email, ttl);
+          cache.put(username + '/' + recipient.address, email, ttl);
         });
         // accept the message once the mail parser is through
         callback(null, qMessage + (firstRecipient || ''));
