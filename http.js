@@ -84,7 +84,6 @@ http.createServer(function(request, response) {
   if (0 !== requestPath.indexOf('/')) {
     requestPath = '/' + requestPath;
   }
-  requestPath = path.resolve(requestPath);
   if (-1 !== requestPath.indexOf('/')) {
     const parts = requestPath.split('/');
     parts.shift();
