@@ -49,9 +49,6 @@ var server = new SMTPServer({
     });
   },
   onConnect: function (session, callback) {
-    if (session.remoteAddress !== '127.0.0.1') {
-      return callback(new Error('Only connections from localhost allowed'));
-    }
     return callback(); // Accept the connection
   },
   onData: function (stream, session, callback) {
