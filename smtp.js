@@ -1,5 +1,3 @@
-'use strict';
-
 const cache = require('memory-cache');
 const SMTPServer = require('smtp-server').SMTPServer;
 const MailParser = require('mailparser').MailParser;
@@ -8,12 +6,12 @@ const bind = process.env.SMSMTP_BIND || '127.0.0.1';
 const port = process.env.SMSMTP_PORT || 2525;
 const host = process.env.SMSMTP_HOST || 'localhost';
 const ttl = Math.max(0, 1000 * +(process.env.SMSMTP_TTL || '300'));
-const freepass = 'free';
 const token_min = 8;
 const token_max = 32;
 const token_pat = /^[0-9a-z]/;
 
 const checkToken = function(token) {
+  'use strict';
   if (!token) {
     return 'missing';
   }
@@ -37,6 +35,7 @@ var server = new SMTPServer({
   useXClient: true,
   useXForward: false,
   onAuth: function (auth, session, callback) {
+    'use strict';
     var username = auth && auth.username;
     var tokenInvalid = checkToken(username);
     if (tokenInvalid) {
@@ -49,12 +48,14 @@ var server = new SMTPServer({
     });
   },
   onConnect: function (session, callback) {
+    'use strict';
     if (session.remoteAddress !== '127.0.0.1') {
       return callback(new Error('Only connections from localhost allowed'));
     }
     return callback(); // Accept the connection
   },
   onData: function (stream, session, callback) {
+    'use strict';
     var mailparser = session.mailparser;
     const user = session.user;
     const username = user && user.username || 'unknown';
@@ -63,9 +64,9 @@ var server = new SMTPServer({
     if (!session.mailparser) {
       mailparser = new MailParser();
       session.mailparser = mailparser;
-      mailparser.on('end', function (email) {
-        email.attachments = (email.attachments||[]).map(function(attachment){
-          var b = new Buffer(attachment.content);
+      const mailparserOnEnd = function (email) {
+        email.attachments = (email.attachments || []).map(function(attachment){
+          var b = Buffer.from(attachment.content);
           attachment.content = b.toString('base64');
           return attachment;
         });
@@ -77,21 +78,24 @@ var server = new SMTPServer({
         });
         // accept the message once the mail parser is through
         callback(null, qMessage + (firstRecipient || ''));
-      });
+      };
+      mailparser.on('end', mailparserOnEnd);
     }
-    stream.on('end', function () {
+    const streamOnEnd = function () {
       var err;
       if (stream.sizeExceeded) {
         err = new Error('Error: message exceeds fixed maximum message size 1 MB');
         err.responseCode = 552;
-        return callback(err);
+        callback(err);
       }
-    });
+    };
+    stream.on('end', streamOnEnd);
     stream.pipe(mailparser);
   }
 });
 
 server.on('error', function (err) {
+  'use strict';
   console.log('Error occurred');
   console.log(err);
 });

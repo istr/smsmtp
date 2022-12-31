@@ -1,15 +1,13 @@
-'use strict';
 // built-in
-var http = require('http');
-var path = require('path');
+const http = require('http');
 // external modules
-var cache = require('memory-cache');
+const cache = require('memory-cache');
 
-var bind = process.env.SMSMTP_HTTP_BIND || '127.0.0.1';
-var port = process.env.SMSMTP_HTTP_PORT || 3000;
-var host = process.env.SMSMTP_HTTP_HOST || 'localhost';
+const bind = process.env.SMSMTP_HTTP_BIND || '127.0.0.1';
+const port = process.env.SMSMTP_HTTP_PORT || 3000;
+const host = process.env.SMSMTP_HTTP_HOST || 'localhost';
 
-var prefix = [
+const prefix = [
   '<!DOCTYPE html><html>',
   '<head>',
   '<meta charset="utf-8"><title>smsmtp</title>',
@@ -26,36 +24,40 @@ var prefix = [
   '</style>',
   '<body>'
 ];
-var suffix = [
+const suffix = [
 '</body>',
-"<script>window.addEventListener('message',function(e){var t=document.getElementById('htmltext');if(t&&e.data&&e.data.h){t.style.height=e.data.h+'px';}});</script>",
+"<script>window.addEventListener('message',function(e){var t=document.getElementById('htmltext');"
+  + "if(t&&e.data&&e.data.h){t.style.height=e.data.h+'px';}});</script>",
 '</html>'
 ];
 
 var testrecipient = 'test@smsmtp.com';
 var testmail = {
-  html: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>testmail</title><style>p{color:green;}</style></head><body><p>Hello, Test!</p></body></html>',
+  html: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>testmail</title>'
+    + '<style>p{color:green;}</style></head><body><p>Hello, Test!</p></body></html>',
   text: 'Hello, Test!',
   headers: {
-    'From': 'smsmtp@smsmtp.com',
-    'To': testrecipient
+    From: 'smsmtp@smsmtp.com',
+    To: testrecipient
   }
 };
 
-var pushHeaders = function(content, mail) {
+const pushHeaders = function(content, mail) {
+  'use strict';
   var headers = mail && mail.headers || {};
   var keys = Object.keys(headers);
   content.push('<div id="headers"><table>');
   keys.map(function(key) {
     content.push('<tr>');
     content.push('<th>', key, '</th>');
-    content.push('<td><ul><li>', [].concat(headers[key]).join('</li><li>'), '</li></ul></td>')
+    content.push('<td><ul><li>', [].concat(headers[key]).join('</li><li>'), '</li></ul></td>');
     content.push('</tr>');
   });
   content.push('</table></div>');
 };
 
-var pushHTML = function(content, mail) {
+const pushHTML = function(content, mail) {
+  'use strict';
   var html = '<base target="_blank" />';
   html += mail.html || '';
   (mail.attachments || []).forEach(function(attachment) {
@@ -72,23 +74,34 @@ var pushHTML = function(content, mail) {
   );
 };
 
-var pushPlain = function(content, mail) {
+const pushPlain = function(content, mail) {
+  'use strict';
   content.push('<pre id="plaintext">', mail.text || '', '</pre>');
 };
 
-http.createServer(function(request, response) {
-  var requestPath = request.url;
-  if (-1 !== requestPath.indexOf('?')) {
-    requestPath = request.url.split('?')[0];
+const manglePath = function(path) {
+  'use strict';
+  if (!path) {
+    return path;
   }
-  if (0 !== requestPath.indexOf('/')) {
-    requestPath = '/' + requestPath;
+  var mangled = path;
+  if (mangled.indexOf('?') !== -1) {
+    mangled = mangled.split('?')[0];
   }
-  if (-1 !== requestPath.indexOf('/')) {
-    const parts = requestPath.split('/');
+  if (mangled.indexOf('/') !== 0) {
+    mangled = '/' + mangled;
+  }
+  if (mangled.indexOf('/') !== -1) {
+    var parts = mangled.split('/');
     parts.shift();
-    requestPath = (parts || []).join('/');
+    mangled = (parts || []).join('/');
   }
+  return mangled;
+};
+
+http.createServer(function(request, response) {
+  'use strict';
+  var requestPath = manglePath(request.url);
   var content = [].concat(prefix);
   var mail;
   if (testrecipient === requestPath) {
@@ -105,8 +118,9 @@ http.createServer(function(request, response) {
     pushHTML(content, mail);
     pushPlain(content, mail);
   } else {
-    if ('' === requestPath) {
-      requestPath = 'please provide recipient email address (<a href="test@smsmtp.com">test@smsmtp.com</a> to test)';
+    if (requestPath === '') {
+      requestPath = 'please provide recipient email address '
+        + '(<a href="test@smsmtp.com">test@smsmtp.com</a> to test)';
     } else {
       requestPath = 'no mail for: ' + requestPath;
     }
@@ -118,5 +132,6 @@ http.createServer(function(request, response) {
   });
   response.end(content.join(''));
 }).listen(port, bind, function() {
+  'use strict';
   console.log('SMSMTP HTTP frontend listening on: %s:%s', bind, port, ' for: http://' + host + ':' + port);
 });
